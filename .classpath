@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="postem-api/src/java"/>
+	<classpathentry kind="src" path="postem-hbm/src/java"/>
 	<classpathentry kind="src" path="postem-app/src/java"/>
 	<classpathentry kind="src" path="postem-impl/src/java"/>
-	<classpathentry kind="src" path="postem-hbm/src/java"/>
-	<classpathentry kind="src" path="postem-tool/src/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jsf/jars/jsf-api-1.1.01.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jsf/jars/jsf-impl-1.1.01.jar"/>
