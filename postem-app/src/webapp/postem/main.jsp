@@ -27,13 +27,13 @@
 						<f:facet name="header">
 							<h:outputText value="#{msgs.gradebook_creators}"/>
 						</f:facet>
-						<h:outputText value="#{gradebook.creator}"/>
+						<h:outputText value="#{gradebook.creatorEid}"/>
 					</h:column>
 					<h:column rendered="#{PostemTool.editable}">
 						<f:facet name="header">
 							<h:outputText value="#{msgs.gradebook_lastmodifiedby}"/>
 						</f:facet>
-						<h:outputText value="#{gradebook.lastUpdater}"/>
+						<h:outputText value="#{gradebook.lastUpdaterEid}"/>
 					</h:column>
 					<h:column>
 						<f:facet name="header">
@@ -80,16 +80,12 @@
 						</h:commandLink>
 					</h:column>
 					<h:column rendered="#{PostemTool.editable}">
-						<h:commandLink action="#{PostemTool.processCsvDownload}" rendered="#{PostemTool.editable && gradebook.hasGrades}" >
+						<h:commandLink action="#{PostemTool.processCsvDownload}" rendered="#{gradebook.hasGrades}" >
 							<h:outputText value="#{msgs.csv_download}"/>
 						</h:commandLink>
 					</h:column>
-					<%-- <h:column rendered="#{PostemTool.editable && gradebook.hasTemplate}"> --%>
-					<h:column rendered="false">
-						<f:facet name="header">
-							<h:outputText value="#{msgs.template_download}"/>
-						</f:facet>
-						<h:commandLink action="#{PostemTool.processTemplateDownload}">
+					<h:column rendered="#{PostemTool.editable}">
+						<h:commandLink action="#{PostemTool.processTemplateDownload}" rendered="#{gradebook.hasTemplate}">
 							<h:outputText value="#{msgs.template}"/>
 						</h:commandLink>
 					</h:column>
