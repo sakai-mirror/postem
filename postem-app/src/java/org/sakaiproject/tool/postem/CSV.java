@@ -37,21 +37,11 @@ public class CSV {
 	private List students;
 
 	private String csv;
-	
-	public static final char COMMA_DELIM = ',';
-	public static final char TAB_DELIM = '\t';
 
 	// private boolean withHeaders = true;
 
 	public CSV(String csv, boolean withHeader) throws DataFormatException {
-		contents = retrieveContents(csv, COMMA_DELIM);
-		headers = retrieveHeaders(contents);
-		students = retrieveStudents(contents, withHeader);
-		this.csv = csv;
-	}
-	
-	public CSV(String csv, boolean withHeader, char delimiter) throws DataFormatException {
-		contents = retrieveContents(csv, delimiter);
+		contents = retrieveContents(csv);
 		headers = retrieveHeaders(contents);
 		students = retrieveStudents(contents, withHeader);
 		this.csv = csv;
@@ -101,7 +91,7 @@ public class CSV {
 		return csv.toString();
 	}
 
-	public static List retrieveContents(String csv, char delimiter) throws DataFormatException {
+	public static List retrieveContents(String csv) throws DataFormatException {
 
 		List all = new ArrayList();
 		List current = new ArrayList();
@@ -131,7 +121,7 @@ public class CSV {
 			} else {
 				if (ii == length - 1 && csv.charAt(ii) != '\n'
 						&& csv.charAt(ii) != '\r') {
-					if (csv.charAt(ii) == delimiter) {
+					if (csv.charAt(ii) == ',') {
 						current.add((it.length() == 0) ? " " : it.toString());
 						current.add("");
 					} else {
@@ -141,7 +131,7 @@ public class CSV {
 					all.add(current);
 					break;
 				}
-				if (csv.charAt(ii) == delimiter) {
+				if (csv.charAt(ii) == ',') {
 					current.add((it.length() == 0) ? " " : it.toString());
 					it = new StringBuffer();
 					// this line would trim leading spaces per the spec, but not trailing
@@ -203,7 +193,7 @@ public class CSV {
 		return results;
 	}
 
-	public static int determineColumns(String csv, char delimiter) {
+	public static int determineColumns(String csv) {
 		int total = 0;
 		boolean inQuotes = false;
 
@@ -218,7 +208,7 @@ public class CSV {
 					}
 				}
 			} else {
-				if (csv.charAt(ii) == delimiter) {
+				if (csv.charAt(ii) == ',') {
 					total++;
 				} else if (csv.charAt(ii) == '\r' || csv.charAt(ii) == '\n') {
 					break;

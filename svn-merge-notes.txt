@@ -1,0 +1,57 @@
+Skipped:
+
+Revision: 13385
+Author: wagnermr@iupui.edu
+Date: 2:36:52 PM, Friday, August 04, 2006
+
+Message:
+SAK-4704
+http://bugs.sakaiproject.org/jira/browse/SAK-4704
+Post'Em layout/template not working --> Added template length to resolve storage issues
+----
+Modified : /postem/trunk/postem-app/src/bundle/org/sakaiproject/tool/postem/bundle/Messages.properties
+Modified : /postem/trunk/postem-app/src/java/org/sakaiproject/tool/postem/PostemTool.java
+Modified : /postem/trunk/postem-hbm/src/java/org/sakaiproject/component/app/postem/data/GradebookImpl.hbm.xml
+
+Revision: 13348
+Author: wagnermr@iupui.edu
+Date: 3:54:33 PM, Thursday, August 03, 2006
+
+Message:
+SAK-4703
+http://bugs.sakaiproject.org/jira/browse/SAK-4703
+Post'Em not accepting tab delimited file
+----
+Modified : /postem/trunk/postem-app/src/bundle/org/sakaiproject/tool/postem/bundle/Messages.properties
+Modified : /postem/trunk/postem-app/src/java/org/sakaiproject/tool/postem/CSV.java
+Modified : /postem/trunk/postem-app/src/java/org/sakaiproject/tool/postem/PostemTool.java
+Modified : /postem/trunk/postem-app/src/webapp/postem/create_gradebook.jsp
+
+
+Revision: 13336
+Author: wagnermr@iupui.edu
+Date: 12:18:05 PM, Thursday, August 03, 2006
+Message:
+
+SAK-4704
+http://bugs.sakaiproject.org/jira/browse/SAK-4704
+Post'Em layout/template not working --> Fixed to work with Java 1.4
+----
+Modified : /postem/trunk/postem-app/src/webapp/postem/download_template.jsp
+Modified : /postem/trunk/postem-hbm/src/java/org/sakaiproject/component/app/postem/data/TemplateImpl.java
+
+
+Revision: 13320
+Author: wagnermr@iupui.edu
+Date: 2:49:53 PM, Wednesday, August 02, 2006
+Message:
+
+SAK-4704
+http://bugs.sakaiproject.org/jira/browse/SAK-4704
+Post'Em layout/template not working
+----
+Modified : /postem/trunk/postem-app/src/bundle/org/sakaiproject/tool/postem/bundle/Messages.properties
+Modified : /postem/trunk/postem-app/src/webapp/postem/create_gradebook.jsp
+Modified : /postem/trunk/postem-app/src/webapp/postem/download_template.jsp
+Modified : /postem/trunk/postem-app/src/webapp/postem/main.jsp
+Modified : /postem/trunk/postem-hbm/src/java/org/sakaiproject/component/app/postem/data/TemplateImpl.java

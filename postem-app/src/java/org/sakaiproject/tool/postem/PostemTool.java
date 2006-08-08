@@ -92,13 +92,6 @@ public class PostemTool {
 	protected String newTemplate;
 
 	protected ArrayList students;
-	
-	protected String delimiter;
-	
-	private static final int TEMPLATE_MAX_LENGTH = 4000;
-	
-	private static final String COMMA_DELIM_STR = "comma";
-	private static final String TAB_DELIM_STR = "tab";
 
 	protected Logger logger = null;
 
@@ -175,13 +168,6 @@ public class PostemTool {
 		this.csv = csv;
 	}
 
-	public String getDelimiter() {
-		return delimiter;
-	}
-	
-	public void setDelimiter(String delimiter) {
-		this.delimiter = delimiter;
-	}
 	public String getNewTemplate() {
 		return newTemplate;
 	}
@@ -311,7 +297,6 @@ public class PostemTool {
 				this.siteId);
 		this.csv = null;
 		this.newTemplate = null;
-		this.delimiter = COMMA_DELIM_STR;
 
 		return "create_gradebook";
 	}
@@ -350,7 +335,6 @@ public class PostemTool {
 		 */
 		this.csv = null;
 		this.newTemplate = null;
-		this.delimiter = COMMA_DELIM_STR;
 
 		return "create_gradebook";
 
@@ -409,22 +393,11 @@ public class PostemTool {
 			PostemTool.populateMessage(FacesMessage.SEVERITY_ERROR, "missing_csv", new Object[] {});
 			return "create_gradebook";
 		}
-		
-		if (!this.delimiter.equals(COMMA_DELIM_STR) && !this.delimiter.equals(TAB_DELIM_STR)) {
-			PostemTool.populateMessage(FacesMessage.SEVERITY_ERROR, "invalid_delim", new Object[] {});
-			return "create_gradebook";
-		}
 
 		if (this.csv != null && this.csv.trim().length() > 0) {
 			// logger.info("*** Non-Empty CSV!");
 			try {
-				
-				char csv_delim = CSV.COMMA_DELIM;
-				if(this.delimiter.equals(TAB_DELIM_STR)) {
-					csv_delim = CSV.TAB_DELIM;
-				}
-				
-				CSV grades = new CSV(csv, withHeader, csv_delim);
+				CSV grades = new CSV(csv, withHeader);
 				
 				if (withHeader == true) {
 					if (grades.getHeaders() != null) {
@@ -445,14 +418,6 @@ public class PostemTool {
 				  if(!usernamesValid(grades)) {
 					  return "create_gradebook";
 				  }
-				}
-				
-				if (this.newTemplate != null && this.newTemplate.trim().length() > 0) {
-					if(this.newTemplate.trim().length() > TEMPLATE_MAX_LENGTH) {
-						PostemTool.populateMessage(FacesMessage.SEVERITY_ERROR, "template_too_long",
-								new Object[] { new Integer(this.newTemplate.trim().length()), new Integer(TEMPLATE_MAX_LENGTH)});
-						return "create_gradebook";
-					}
 				}
 				
 				if (withHeader == true) {
@@ -512,7 +477,7 @@ public class PostemTool {
 
 		if (this.newTemplate != null && this.newTemplate.trim().length() > 0) {
 			currentGradebook
-					.setTemplate(gradebookManager.createTemplate(newTemplate.trim()));
+					.setTemplate(gradebookManager.createTemplate(newTemplate));
 		} else if (this.newTemplate != null) {
 			// logger.info("*** Non Null Empty Template!");
 			currentGradebook.setTemplate(null);

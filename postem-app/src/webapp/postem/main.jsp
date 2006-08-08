@@ -80,12 +80,16 @@
 						</h:commandLink>
 					</h:column>
 					<h:column rendered="#{PostemTool.editable}">
-						<h:commandLink action="#{PostemTool.processCsvDownload}" rendered="#{gradebook.hasGrades}" >
+						<h:commandLink action="#{PostemTool.processCsvDownload}" rendered="#{PostemTool.editable && gradebook.hasGrades}" >
 							<h:outputText value="#{msgs.csv_download}"/>
 						</h:commandLink>
 					</h:column>
-					<h:column rendered="#{PostemTool.editable}">
-						<h:commandLink action="#{PostemTool.processTemplateDownload}" rendered="#{gradebook.hasTemplate}">
+					<%-- <h:column rendered="#{PostemTool.editable && gradebook.hasTemplate}"> --%>
+					<h:column rendered="false">
+						<f:facet name="header">
+							<h:outputText value="#{msgs.template_download}"/>
+						</f:facet>
+						<h:commandLink action="#{PostemTool.processTemplateDownload}">
 							<h:outputText value="#{msgs.template}"/>
 						</h:commandLink>
 					</h:column>
