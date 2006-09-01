@@ -92,6 +92,21 @@ public class PostemTool {
 	protected String newTemplate;
 
 	protected ArrayList students;
+	
+	protected String delimiter;
+	
+	protected boolean ascending = true;
+	
+	protected String sortBy = Gradebook.SORT_BY_TITLE;
+	
+	protected boolean displayErrors;
+
+	protected boolean userPressedBack = false;
+	
+	private static final int TEMPLATE_MAX_LENGTH = 4000;
+	
+	private static final String COMMA_DELIM_STR = "comma";
+	private static final String TAB_DELIM_STR = "tab";
 
 	protected Logger logger = null;
 
@@ -146,11 +161,11 @@ public class PostemTool {
 			if (checkAccess()) {
 				// logger.info("**** Getting by context!");
 				gradebooks = new ArrayList(gradebookManager
-						.getGradebooksByContext(siteId));
+						.getGradebooksByContext(siteId, sortBy, ascending));
 			} else {
 				// logger.info("**** Getting RELEASED by context!");
 				gradebooks = new ArrayList(gradebookManager
-						.getReleasedGradebooksByContext(siteId));
+						.getReleasedGradebooksByContext(siteId, sortBy, ascending));
 			}
 		} catch (Exception e) {
 			gradebooks = null;
@@ -168,6 +183,13 @@ public class PostemTool {
 		this.csv = csv;
 	}
 
+	public String getDelimiter() {
+		return delimiter;
+	}
+	
+	public void setDelimiter(String delimiter) {
+		this.delimiter = delimiter;
+	}
 	public String getNewTemplate() {
 		return newTemplate;
 	}
@@ -215,6 +237,17 @@ public class PostemTool {
 	public void setWithHeader(boolean withHeader) {
 		this.withHeader = withHeader;
 	}
+	
+	public boolean getDisplayErrors() {	
+		for(Iterator iter = FacesContext.getCurrentInstance().getMessages(); iter.hasNext();) {
+			return true;   // there is at least one message to display
+		}
+		return false;
+	}
+	
+	public void setDisplayErrors(boolean displayErrors) {
+		this.displayErrors = displayErrors;
+	}
 
 	public String getCurrentStudentGrades() {
 		this.userId = SessionManager.getCurrentSessionUserId();
@@ -250,8 +283,13 @@ public class PostemTool {
 		if (students.size() == 0) {
 			return "<p>" + msgs.getString("no_grades_in_gradebook") + " " + currentGradebook.getTitle() + ".</p>";
 		}
-		StudentGrades student = (StudentGrades) students.iterator().next();
-		return student.formatGrades();
+		if (currentGradebook.getFirstUploadedUsername() != null) {
+			StudentGrades student = currentGradebook.studentGrades(currentGradebook.getFirstUploadedUsername());
+			return student.formatGrades();
+		} else {
+			StudentGrades student = (StudentGrades) students.iterator().next();
+			return student.formatGrades();
+		}
 	}
 
 	public String getSelectedStudentGrades() {
@@ -274,6 +312,78 @@ public class PostemTool {
 			}
 		}
 		return msgs.getString("select_participant");
+	}
+	
+	public void toggleSort(String sortByType) {
+		if (sortBy.equals(sortByType)) {
+	       if (ascending) {
+	    	   ascending = false;
+	       } else {
+	    	   ascending = true;
+	       }
+	    } else {
+	    	sortBy = sortByType;
+	    	ascending = true;
+	    }
+	}
+	
+	public String toggleTitleSort()	{
+		toggleSort(Gradebook.SORT_BY_TITLE);
+	    return "main";
+	}
+	
+	public String toggleCreatorSort()	{
+		toggleSort(Gradebook.SORT_BY_CREATOR);
+	    return "main";
+	}
+	
+	public String toggleModBySort()	{    
+		toggleSort(Gradebook.SORT_BY_MOD_BY);
+	    return "main";
+	}
+	    
+	public String toggleModDateSort()	{    
+		toggleSort(Gradebook.SORT_BY_MOD_DATE);
+	    return "main";
+	}
+	
+	public String toggleReleasedSort()	{    
+		toggleSort(Gradebook.SORT_BY_RELEASED);	    
+	    return "main";
+	}
+	
+	public boolean isTitleSort() {
+		if (sortBy.equals(Gradebook.SORT_BY_TITLE))
+			return true;
+		return false;
+	}
+		
+	public boolean isCreatorSort() {
+		if (sortBy.equals(Gradebook.SORT_BY_CREATOR))
+			return true;
+		return false;
+	}
+		
+	public boolean isModBySort() {
+		if (sortBy.equals(Gradebook.SORT_BY_MOD_BY))
+			return true;
+		return false;
+	}
+	
+	public boolean isModDateSort() {
+		if (sortBy.equals(Gradebook.SORT_BY_MOD_DATE))
+			return true;
+		return false;
+	}
+	
+	public boolean isReleasedSort() {
+		if (sortBy.equals(Gradebook.SORT_BY_RELEASED))
+			return true;
+		return false;
+	}
+	
+	public boolean isAscending() {
+		return ascending;
 	}
 
 	public String processCreateNew() {
@@ -300,6 +410,7 @@ public class PostemTool {
 				this.siteId);
 		this.csv = null;
 		this.newTemplate = null;
+		this.delimiter = COMMA_DELIM_STR;
 
 		return "create_gradebook";
 	}
@@ -329,6 +440,7 @@ public class PostemTool {
 		oldGradebook = gradebookManager.createEmptyGradebook(currentGradebook
 				.getCreator(), currentGradebook.getContext());
 		oldGradebook.setId(currentGradebook.getId());
+		oldGradebook.setStudents(currentGradebook.getStudents());
 
 		gradebooks = null;
 
@@ -338,11 +450,12 @@ public class PostemTool {
 		 */
 		this.csv = null;
 		this.newTemplate = null;
+		this.delimiter = COMMA_DELIM_STR;
 
 		return "create_gradebook";
 
 	}
-
+	
 	public static void populateMessage(FacesMessage.Severity severity,
 			String messageId, Object[] args) {
 		ApplicationFactory factory = (ApplicationFactory) FactoryFinder
@@ -396,11 +509,22 @@ public class PostemTool {
 			PostemTool.populateMessage(FacesMessage.SEVERITY_ERROR, "missing_csv", new Object[] {});
 			return "create_gradebook";
 		}
+		
+		if (!this.delimiter.equals(COMMA_DELIM_STR) && !this.delimiter.equals(TAB_DELIM_STR)) {
+			PostemTool.populateMessage(FacesMessage.SEVERITY_ERROR, "invalid_delim", new Object[] {});
+			return "create_gradebook";
+		}
 
 		if (this.csv != null && this.csv.trim().length() > 0) {
 			// logger.info("*** Non-Empty CSV!");
 			try {
-				CSV grades = new CSV(csv, withHeader);
+				
+				char csv_delim = CSV.COMMA_DELIM;
+				if(this.delimiter.equals(TAB_DELIM_STR)) {
+					csv_delim = CSV.TAB_DELIM;
+				}
+				
+				CSV grades = new CSV(csv, withHeader, csv_delim);
 				
 				if (withHeader == true) {
 					if (grades.getHeaders() != null) {
@@ -427,6 +551,14 @@ public class PostemTool {
 				  }
 				}
 				
+				if (this.newTemplate != null && this.newTemplate.trim().length() > 0) {
+					if(this.newTemplate.trim().length() > TEMPLATE_MAX_LENGTH) {
+						PostemTool.populateMessage(FacesMessage.SEVERITY_ERROR, "template_too_long",
+								new Object[] { new Integer(this.newTemplate.trim().length()), new Integer(TEMPLATE_MAX_LENGTH)});
+						return "create_gradebook";
+					}
+				}
+				
 				if (withHeader == true) {
 					if (grades.getHeaders() != null) {	
 						PostemTool.populateMessage(FacesMessage.SEVERITY_ERROR,
@@ -443,7 +575,7 @@ public class PostemTool {
 				}
 				List slist = grades.getStudents();
 
-				if (oldGradebook.getId() != null) {
+				if (oldGradebook.getId() != null && !this.userPressedBack) {
 					Set oldStudents = currentGradebook.getStudents();
 					oldGradebook.setStudents(oldStudents);
 				}
@@ -458,6 +590,9 @@ public class PostemTool {
 					// uname);
 					gradebookManager.createStudentGradesInGradebook(uname, ss,
 							currentGradebook);
+					if (currentGradebook.getStudents().size() == 1) {
+						currentGradebook.setFirstUploadedUsername(uname);  //otherwise, the verify screen shows first in ABC order
+					}
 				}
 			} catch (DataFormatException exception) {
 				/*
@@ -484,7 +619,7 @@ public class PostemTool {
 
 		if (this.newTemplate != null && this.newTemplate.trim().length() > 0) {
 			currentGradebook
-					.setTemplate(gradebookManager.createTemplate(newTemplate));
+					.setTemplate(gradebookManager.createTemplate(newTemplate.trim()));
 		} else if (this.newTemplate != null) {
 			// logger.info("*** Non Null Empty Template!");
 			currentGradebook.setTemplate(null);
@@ -546,6 +681,7 @@ public class PostemTool {
 			this.csv = null;
 			currentGradebook.setStudents(null);
 		}
+		this.userPressedBack = true;
 		return "create_gradebook";
 	}
 
@@ -856,7 +992,7 @@ public class PostemTool {
 			PostemTool.populateMessage(FacesMessage.SEVERITY_ERROR,
 					"invalid_username", new Object[] { invalidUsernames.get(0) });
 			PostemTool.populateMessage(FacesMessage.SEVERITY_ERROR,
-					"single_invalid_username_dir", new Object[] { invalidUsernames.get(0) });
+					"single_invalid_username_dir", new Object[] { });
 		} else if (invalidUsernames.size() > 1) {
 			PostemTool.populateMessage(FacesMessage.SEVERITY_ERROR,
 					"blank", new Object[] { });
