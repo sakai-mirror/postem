@@ -8,7 +8,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/jsf/jars/jsf-api-1.1.01.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jsf/jars/jsf-impl-1.1.01.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/taglibs/jars/standard-1.1.2.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/commons-fileupload/jars/commons-fileupload-1.0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-fileupload/jars/commons-fileupload-1.1.1.jar"/>
 	<classpathentry sourcepath="JAVA_DIR/myfaces-1.0.9-src" kind="var" path="MAVEN_REPO/myfaces/jars/myfaces-1.0.9.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-math/jars/commons-math-1.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/user-api"/>
