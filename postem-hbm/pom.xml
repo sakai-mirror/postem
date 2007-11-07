@@ -42,6 +42,12 @@
 <!--properties:  deploy.target: shared -->
       <scope>provided</scope>
     </dependency>
+    
+    <dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${sakai.commons.lang.version}</version>
+		</dependency>
   </dependencies>
   <build>
     
