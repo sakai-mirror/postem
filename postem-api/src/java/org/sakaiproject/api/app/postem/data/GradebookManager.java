@@ -56,4 +56,41 @@ public interface GradebookManager {
 	public void deleteGradebook(final Gradebook gradebook);
 
 	public void deleteStudentGrades(final StudentGrades student);
+	
+	/**
+	 * 
+	 * @param gradebookId
+	 * @return gradebook object with the headings and student data populated
+	 */
+	public Gradebook getGradebookByIdWithHeadingsAndStudents(final Long gradebookId);
+	
+	/**
+	 * 
+	 * @param gradebookId
+	 * @return gradebook object with headings populated, not students
+	 */
+	public Gradebook getGradebookByIdWithHeadings(final Long gradebookId);
+	
+	/**
+	 * Return the StudentGrades object associated with the given gradebook and
+	 * username
+	 * @param gradebook
+	 * @param username
+	 * @return
+	 */
+	public StudentGrades getStudentByGBAndUsername(final Gradebook gradebook, final String username);
+	
+	/**
+	 * Update an individual StudentGrades object
+	 * @param student
+	 */
+	public void updateStudent(StudentGrades student);
+	
+	/**
+	 * 
+	 * @param gradebook
+	 * @return a list of all of the usernames associated with the given gradebook
+	 */
+	public List getUsernamesInGradebook(Gradebook gradebook);
+	
 }

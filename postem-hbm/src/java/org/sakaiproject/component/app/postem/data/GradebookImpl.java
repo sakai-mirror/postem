@@ -78,6 +78,8 @@ public class GradebookImpl implements Gradebook, Comparable, Serializable {
 	protected Boolean released = new Boolean(false);
 
 	protected Boolean releaseStatistics = new Boolean(false);
+	
+	protected List<String> usernames;
 
 	private static String units = "px";
 	
@@ -215,11 +217,7 @@ public class GradebookImpl implements Gradebook, Comparable, Serializable {
 	}
 
 	public void setStudents(Set students) {
-		if (students == null) {
-			this.students = new TreeSet();
-		} else {
-			this.students = new TreeSet(students);
-		}
+		this.students = students;
 	}
 
 	public Template getTemplate() {
@@ -288,6 +286,13 @@ public class GradebookImpl implements Gradebook, Comparable, Serializable {
 	
 	public String getFirstUploadedUsername() {
 		return firstUploadedUsername;
+	}
+	
+	public void setUsernames(List<String> usernames) {
+		this.usernames = usernames;
+	}
+	public List<String> getUsernames() {
+		return usernames;
 	}
 
 	public String getHeadingsRow() {
@@ -359,20 +364,6 @@ public class GradebookImpl implements Gradebook, Comparable, Serializable {
 			if (((StudentGrades) iter.next()).getUsername().equalsIgnoreCase(username)) {
 				return true;
 			}
-		}
-		return false;
-	}
-
-	public boolean getHasGrades() {
-		if (students != null && students.size() != 0) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean getHasTemplate() {
-		if (template != null) {
-			return true;
 		}
 		return false;
 	}
@@ -481,10 +472,10 @@ public class GradebookImpl implements Gradebook, Comparable, Serializable {
 		TreeMap studentMap = new TreeMap();
 		studentMap.put(" ", "blank");
 
-		Iterator iter = getStudents().iterator();
+		Iterator iter = getUsernames().iterator();
 		while (iter.hasNext()) {
-			StudentGrades ss = (StudentGrades) iter.next();
-			studentMap.put(ss.getUsername(), ss.getUsername());
+			String username = (String) iter.next();
+			studentMap.put(username, username);
 		}
 		return studentMap;
 	}

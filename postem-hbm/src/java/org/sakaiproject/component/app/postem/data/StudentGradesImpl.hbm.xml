@@ -34,5 +34,12 @@
 
 
 	</class>
+	
+	<query name="findUsernamesInGradebook">
+    <![CDATA[select student.username 
+             from org.sakaiproject.component.app.postem.data.StudentGradesImpl as student
+             where student.gradebook = :gradebook order by username asc
+    ]]>
+  </query>
 
 </hibernate-mapping>

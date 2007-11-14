@@ -94,10 +94,6 @@ public interface Gradebook {
 
 	public boolean hasStudent(String username);
 
-	public boolean getHasGrades();
-
-	public boolean getHasTemplate();
-
 	public boolean getRelease();
 
 	public void setRelease(boolean release);
@@ -123,5 +119,8 @@ public interface Gradebook {
 	public String getFirstUploadedUsername();
 	
 	public void setFirstUploadedUsername(String username);
+	
+	public List getUsernames();
+	public void setUsernames(List<String> usernames);
 
 }

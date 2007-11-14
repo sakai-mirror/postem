@@ -31,7 +31,9 @@ import java.util.Comparator;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.sakaiproject.api.app.postem.data.Gradebook;
@@ -312,6 +314,102 @@ public class GradebookManagerImpl extends HibernateDaoSupport implements
 				return GradebookImpl.TitleDescComparator;
 			}	
 		}
+	}
+	
+	public Gradebook getGradebookByIdWithHeadingsAndStudents(final Long gradebookId) {
+		if (gradebookId == null) {
+	        throw new IllegalArgumentException("Null gradebookId passed to getGradebookByIdWithStudents");
+	       }
+
+		HibernateCallback hcb = new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException,
+					SQLException {
+
+				Criteria crit = session.createCriteria(GradebookImpl.class).add(
+						Expression.eq(ID, gradebookId));
+
+				Gradebook gradebook = (Gradebook)crit.uniqueResult();
+				getHibernateTemplate().initialize(gradebook.getHeadings());
+				getHibernateTemplate().initialize(gradebook.getStudents());
+				
+				return gradebook;	
+			}
+		};
+
+	      return (Gradebook) getHibernateTemplate().execute(hcb); 
+	
+	}
+	
+	public Gradebook getGradebookByIdWithHeadings(final Long gradebookId) {
+		if (gradebookId == null) {
+	        throw new IllegalArgumentException("Null gradebookId passed to getGradebookByIdWithHeadings");
+	       }
+
+		HibernateCallback hcb = new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException,
+					SQLException {
+
+				Criteria crit = session.createCriteria(GradebookImpl.class).add(
+						Expression.eq(ID, gradebookId));
+
+				Gradebook gradebook = (Gradebook)crit.uniqueResult();
+				getHibernateTemplate().initialize(gradebook.getHeadings());
+				
+				return gradebook;	
+			}
+		};
+
+	      return (Gradebook) getHibernateTemplate().execute(hcb); 
+	
+	}
+	
+	public StudentGrades getStudentByGBAndUsername(final Gradebook gradebook, final String username) {
+		if (gradebook == null || username == null) {
+	        throw new IllegalArgumentException("Null gradebookId or username passed to getStudentByGBIdAndUsername");
+	       }
+
+		HibernateCallback hcb = new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException,
+					SQLException {
+				gradebook.setStudents(null);
+				Criteria crit = session.createCriteria(StudentGradesImpl.class).add(
+						Expression.eq("gradebook", gradebook)).add(Expression.eq("username", username));
+
+				StudentGrades student = (StudentGrades)crit.uniqueResult();
+				
+				return student;	
+			}
+		};
+
+	      return (StudentGrades) getHibernateTemplate().execute(hcb); 
+	}
+	
+	public void updateStudent(StudentGrades student) throws IllegalArgumentException {
+		if (student == null) {
+			throw new IllegalArgumentException("Null Argument");
+		} else {
+			HibernateTemplate temp = getHibernateTemplate();
+			temp.saveOrUpdate(student);
+		}
+	}
+	
+	public List getUsernamesInGradebook(final Gradebook gradebook) {
+		if (gradebook == null) {
+	        throw new IllegalArgumentException("Null gradebook passed to getUsernamesInGradebook");
+	       }
+
+		HibernateCallback hcb = new HibernateCallback()
+	    {
+	      public Object doInHibernate(Session session) throws HibernateException,
+	          SQLException
+	      {
+	        Query q = session.getNamedQuery("findUsernamesInGradebook");        
+	        q.setParameter("gradebook", gradebook);
+	        return q.list();
+	      }
+	    };
+	        
+	    return (List) getHibernateTemplate().execute(hcb);  
 	}
 
 }
