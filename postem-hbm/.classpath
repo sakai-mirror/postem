@@ -1,0 +1,11 @@
+<classpath>
+  <classpathentry kind="src" path="src/java"/>
+  <classpathentry kind="output" path="m2-target/classes"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/commons-discovery/commons-discovery/0.2/commons-discovery-0.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-math/commons-math/1.0/commons-math-1.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
+  <classpathentry kind="src" path="/sakai-postem-api"/>
+  <classpathentry kind="src" path="/sakai-user-api"/>
+</classpath>

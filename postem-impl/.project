@@ -1,0 +1,16 @@
+<projectDescription>
+  <name>sakai-postem-impl</name>
+  <comment/>
+  <projects>
+    <project>sakai-postem-api</project>
+    <project>sakai-postem-hbm</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>
