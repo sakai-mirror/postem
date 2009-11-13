@@ -12,9 +12,9 @@
   <artifactId>postem-base</artifactId>
   <packaging>pom</packaging>
   <scm>
-    <connection>scm:svn:https://source.sakaiproject.org/svn/postem/trunk</connection>
-    <developerConnection>scm:svn:https://source.sakaiproject.org/svn/postem/trunk</developerConnection>
-    <url>https://source.sakaiproject.org/svn/postem/trunk</url>
+    <connection>scm:svn:https://source.sakaiproject.org/svn/postem/branches/sakai-2.7.x</connection>
+    <developerConnection>scm:svn:https://source.sakaiproject.org/svn/postem/branches/sakai-2.7.x</developerConnection>
+    <url>https://source.sakaiproject.org/svn/postem/branches/sakai-2.7.x</url>
   </scm>
   <modules>
     <module>components</module>
